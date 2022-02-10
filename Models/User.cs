@@ -10,11 +10,13 @@ public class User
     
     [Required]
     [MaxLength(50,ErrorMessage = "La taille max est 50")]
-    [DisplayName("Prénom")] public string Firstname { get; set; }
+    [DisplayName("Prénom")]
+    public string Firstname { get; set; }
     
     [Required]
     [MaxLength(50,ErrorMessage = "La taille max est 50")]
-    [DisplayName("Nom")] public string Lastname { get; set; }
+    [DisplayName("Nom")] 
+    public string Lastname { get; set; }
 
     [Required]
     [EmailAddress]

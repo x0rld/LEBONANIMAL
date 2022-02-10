@@ -23,7 +23,7 @@ namespace lebonanimal.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            return View(await _context.Users.ToListAsync());
         }
 
         // GET: User/Details/5
@@ -34,14 +34,14 @@ namespace lebonanimal.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
+            var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(user);
         }
 
         // GET: User/Create
@@ -55,15 +55,12 @@ namespace lebonanimal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Category category)
+        public async Task<IActionResult> Create([Bind("Id,Firstname,Lastname,Email,Password,PasswordConfirm,Banned,Admin")] User user)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(category);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(category);
+            if (!ModelState.IsValid) return View(user);
+            _context.Add(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
         // GET: User/Edit/5
@@ -74,12 +71,12 @@ namespace lebonanimal.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            return View(category);
+            return View(user);
         }
 
         // POST: User/Edit/5
@@ -87,9 +84,9 @@ namespace lebonanimal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Firstname,Lastname,Email,Password,Banned,Admin")] User user)
         {
-            if (id != category.Id)
+            if (id != user.Id)
             {
                 return NotFound();
             }
@@ -98,12 +95,12 @@ namespace lebonanimal.Controllers
             {
                 try
                 {
-                    _context.Update(category);
+                    _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryExists(category.Id))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -114,7 +111,7 @@ namespace lebonanimal.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(user);
         }
 
         // GET: User/Delete/5
@@ -125,14 +122,14 @@ namespace lebonanimal.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
+            var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(user);
         }
 
         // POST: User/Delete/5
@@ -140,15 +137,15 @@ namespace lebonanimal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            _context.Categories.Remove(category);
+            var user = await _context.Users.FindAsync(id);
+            _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryExists(int id)
+        private bool UserExists(int id)
         {
-            return _context.Categories.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }
