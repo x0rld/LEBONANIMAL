@@ -14,10 +14,12 @@ namespace lebonanimal.Controllers
     public class ProductController : Controller
     {
         private readonly DbConnect _context;
+        private readonly IWebHostEnvironment _he;
 
-        public ProductController(DbConnect context)
+        public ProductController(DbConnect context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            _he = hostEnvironment;
         }
 
         // GET: Product
@@ -47,6 +49,7 @@ namespace lebonanimal.Controllers
         // GET: Product/Create
         public IActionResult Create()
         {
+            ViewBag.Category = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
 
@@ -55,15 +58,69 @@ namespace lebonanimal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Price,ImgPath,Description,Certificat,Enabled,Deleted")] Product product)
+        // [Bind("Id,Title,Price,ImgPath,Description,Certificat,Enabled,Deleted")] avant Product product
+        public async Task<IActionResult> Create([Bind("Id,Title,Price,ImgPath,Description,Certificat,Enabled,Deleted")] Product product, List<IFormFile> ImgPath, List<IFormFile> Certificat)
         {
-            if (ModelState.IsValid)
+  
+
+            // pour les photos 
+            
+            string wwwPath = this._he.WebRootPath;
+            string contentPath = this._he.ContentRootPath;
+
+            string pathPhotos = Path.Combine(this._he.WebRootPath, "files/photos");
+            if (!Directory.Exists(pathPhotos))
             {
+                Directory.CreateDirectory(pathPhotos);
+            }
+
+            List<string> uploadedFiles = new List<string>();
+            foreach (IFormFile postedFile in ImgPath)
+            {
+                //string fileName = Path.GetFileName(product.ImgPath);
+                string fileName = postedFile.FileName;
+                using (FileStream stream = new FileStream(Path.Combine(pathPhotos, fileName), FileMode.Create))
+                {
+                    postedFile.CopyTo(stream);
+                    uploadedFiles.Add(fileName);
+                    ViewBag.Message1 += string.Format("<b>{0}</b> uploaded.<br />", fileName);
+                    product.ImgPath = fileName;
+                }
+            }
+
+            // pour les certificats
+            string pathCertificates = Path.Combine(this._he.WebRootPath, "files/certificates");
+            if (!Directory.Exists(pathCertificates))
+            {
+                Directory.CreateDirectory(pathCertificates);
+            }
+
+            List<string> uploadedCerts = new List<string>();
+            foreach (IFormFile postedFile in Certificat)
+            {
+                // string fileName = Path.GetFileName(product.Certificat);
+                string fileName = postedFile.FileName;
+                using (FileStream stream = new FileStream(Path.Combine(pathCertificates, fileName), FileMode.Create))
+                {
+                    postedFile.CopyTo(stream);
+                    uploadedCerts.Add(fileName);
+                    ViewBag.Message2 += string.Format("<b>{0}</b> uploaded.<br />", fileName);
+                    product.Certificat = fileName;
+                }
+            }
+
+            product.User = _context.Users.Find(2);
+            product.Category = _context.Categories.Find(int.Parse(Request.Form["Category.Id"]));
+
+            TempData["Message"] = "File successfully uploaded to File System.";
+
+           // if (ModelState.IsValid)
+            // {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            return View(product);
+            // }
+            //return View(product);
         }
 
         // GET: Product/Edit/5
