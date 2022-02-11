@@ -6,10 +6,13 @@
 }
 
 <h1>Index</h1>
-
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+@if (!string.IsNullOrEmpty(Context.Session.GetString("Firstname")))
+{
+    <h2>Bonjour, @Context.Session.GetString("Firstname")</h2>   
+}
 <table class="table">
     <thead>
         <tr>
@@ -25,12 +28,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Password)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Banned)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Admin)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -45,15 +42,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Banned)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Admin)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

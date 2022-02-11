@@ -9,6 +9,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DbConnect>(option =>
     option.UseSqlServer(builder.Configuration["DbString"]));
 
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,6 +34,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

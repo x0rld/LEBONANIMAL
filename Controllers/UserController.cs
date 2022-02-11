@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Isopoh.Cryptography.Argon2;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -55,11 +56,39 @@ namespace lebonanimal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Firstname,Lastname,Email,Password,PasswordConfirm,Banned,Admin")] User user)
+        public async Task<IActionResult> Create([Bind("Id,Firstname,Lastname,Email,Password,ConfirmPassword,Banned,Admin")] User user)
         {
             if (!ModelState.IsValid) return View(user);
+            user.Password = Argon2.Hash(user.Password);
             _context.Add(user);
             await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+// GET: User/Create
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        // POST: User/Login
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Login([Bind("Email,Password")] UserLogin user)
+        {
+            if (!ModelState.IsValid) return View(user);
+            var userDb = _context.Users.Single(user1 => user1.Email == user.Email);
+ 
+            if(!Argon2.Verify(userDb.Password,user.Password))
+            {
+                TempData["error"] = "mot de passe ou mail incorrect";
+                return View(user);
+            }
+            HttpContext.Session.SetString("Firstname",userDb.Firstname);
+            HttpContext.Session.SetString("Lastname",userDb.Lastname);
+            HttpContext.Session.SetString("Email",userDb.Email);
+            var result  = HttpContext.Session.GetString("Email");
             return RedirectToAction("Index");
         }
 
