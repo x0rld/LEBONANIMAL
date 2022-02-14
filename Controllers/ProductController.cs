@@ -109,7 +109,7 @@ namespace lebonanimal.Controllers
                 }
             }
 
-            product.User = _context.Users.Find(2);
+            product.User = _context.Users.Find(3);
             product.Category = _context.Categories.Find(int.Parse(Request.Form["Category.Id"]));
 
             TempData["Message"] = "File successfully uploaded to File System.";

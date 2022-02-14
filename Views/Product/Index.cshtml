@@ -10,63 +10,27 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImgPath)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Certificat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Enabled)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Deleted)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImgPath)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Certificat)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Enabled)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Deleted)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+    <section class=" d-flex flex-row justify-content-between m-2">
+                <div class="card d-flex flex-row justify-content-between  col-10  " >
+                    <div class="h-100 overflow-hidden w-25 border border-secondary"><img src="~/files/photos/@Html.DisplayFor(modelItem => item.ImgPath)" class="card-img-top h-100 " alt="image @Html.DisplayFor(modelItem => item.Title)">
+                        </div>
+                    <div class="card-body text-center border-secondary h-100 d-flex flex-column justify-content-center">
+                        <h5 class="card-title border border-secondary">@Html.DisplayFor(modelItem => item.Title)</h5>
+                        <p class="card-text h-50 border border-secondary">@Html.DisplayFor(modelItem => item.Description)</p>
+                         <p class="border border-secondary">@Html.DisplayFor(modelItem => item.Price) €</p>
+                         <p class="border border-secondary">@Html.DisplayFor(modelItem => item.Certificat)</p>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center">
+                        
+                        <label for="Achat"></label>
+                         <input type="checkbox" name="Achat" value="Acheter"/>Acheter
+                          <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        
+                    </div>
+                </div>                  
+            </section>
 }
-    </tbody>
-</table>
