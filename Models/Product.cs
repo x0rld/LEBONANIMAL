@@ -26,7 +26,7 @@ public class Product
     
     [FileExtensions(Extensions = "pdf", ErrorMessage = "Ce n'est pas un pdf")]
     [DisplayName("Certificat en PDF pour les animaux supérieur à 500€")]
-    public string Certificat { get; set; }
+    public string? Certificat { get; set; }
     
     [DefaultValue(false)]
     public bool Enabled { get; set; }
