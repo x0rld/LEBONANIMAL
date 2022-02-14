@@ -89,7 +89,7 @@ namespace lebonanimal.Controllers
             HttpContext.Session.SetString("Lastname",userDb.Lastname);
             HttpContext.Session.SetString("Email",userDb.Email);
             HttpContext.Session.SetInt32("Id",userDb.Id);
-            HttpContext.Session.SetInt32("Id",userDb.Admin ? 1 : 0);
+            HttpContext.Session.SetInt32("IsAdmin",userDb.Admin ? 1 : 0);
 
             return RedirectToAction("Index");
         }
