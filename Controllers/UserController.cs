@@ -150,5 +150,21 @@ namespace lebonanimal.Controllers
         {
             return _context.Categories.Any(e => e.Id == id);
         }
+
+        public IActionResult AddAnnonce()
+        {
+            return View();
+        }
+
+        public IActionResult AdminPage()
+        {
+            return View();
+        }
+
+        public IActionResult ConnectedClient()
+        {
+            return View();
+        }
+
     }
 }
