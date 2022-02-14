@@ -2,7 +2,53 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+            <div class="row container-fluid h-50 ">
+                <div class="col-10 d-flex justify-content-center h-50 mb-3 mt-3 flex-nowrap flex-row">
+                         <div class="dropdown">
+                      <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        Animaux
+                      </a>
+
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><a class="dropdown-item">Chiens</a></li>
+                        <li><a class="dropdown-item">Chats</a></li>
+                        <li><a class="dropdown-item">Oiseaux</a></li>
+                      </ul>
+                    </div>
+
+                        <input placeholder="Barre de recherche" />
+                         <div class="dropdown">
+                      <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        Trier par:
+                      </a>
+
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><a class="dropdown-item">+ancien</a></li>
+                        <li><a class="dropdown-item">+récent</a></li>
+                        <li><a class="dropdown-item">-cher</a></li>
+                         <li><a class="dropdown-item">+cher</a></li>
+                      </ul>
+                    </div>
+                                    
+                 </div>
+              </div>
+                       
+            <section class=" d-flex flex-row justify-content-between m-2">
+                <div class="card d-flex flex-row justify-content-between  col-10  " >
+                    <div class="h-100 overflow-hidden w-25 border border-secondary"><img src="..." class="card-img-top h-100 " alt="...">
+                        </div>
+                    <div class="card-body text-center border-secondary h-100 d-flex flex-column justify-content-center">
+                        <h5 class="card-title border border-secondary">Card title</h5>
+                        <p class="card-text h-50 border border-secondary">desc</p>
+                         <p class="border border-secondary">Price</p>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center">
+                        
+                        <label for="Achat"></label>
+                         <input type="checkbox" name="Achat" value="Acheter"/>Acheter
+                        
+                    </div>
+                </div>                  
+            </section>
+
+             
