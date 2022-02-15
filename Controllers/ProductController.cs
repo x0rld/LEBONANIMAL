@@ -1,8 +1,5 @@
 #nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using MetadataExtractor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +46,12 @@ namespace lebonanimal.Controllers
         // GET: Product/Create
         public IActionResult Create()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Firstname")))
+            {
+                TempData["error"] = "Vous devez vous connecter pour ajouter un produit";
+                return RedirectToAction("Login", "User", 
+                new {redirectTo=$"/{ControllerContext.RouteData.Values["Controller"]}/{ControllerContext.RouteData.Values["Action"]}" });
+            }
             ViewBag.Category = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
@@ -58,69 +61,114 @@ namespace lebonanimal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // [Bind("Id,Title,Price,ImgPath,Description,Certificat,Enabled,Deleted")] avant Product product
-        public async Task<IActionResult> Create([Bind("Id,Title,Price,ImgPath,Description,Certificat,Enabled,Deleted")] Product product, List<IFormFile> ImgPath, List<IFormFile> Certificat)
+        public async Task<IActionResult> Create([Bind("Id,Title,Price,ImgPath,Description,Certificat")] Product product, List<IFormFile> imgPath, List<IFormFile> certificat)
         {
-  
-
-            // pour les photos 
             
-            string wwwPath = this._he.WebRootPath;
-            string contentPath = this._he.ContentRootPath;
-
-            string pathPhotos = Path.Combine(this._he.WebRootPath, "files/photos");
-            if (!Directory.Exists(pathPhotos))
+            if (HttpContext.Session.GetInt32("Id") == null)
             {
-                Directory.CreateDirectory(pathPhotos);
+                TempData["error"] = "Vous devez vous connecter pour ajouter un produit";
+                return RedirectToAction("Login","User", 
+                        new {redirectTo=$"/{ControllerContext.RouteData.Values["Controller"]}/{ControllerContext.RouteData.Values["Action"]}" });
             }
-
-            List<string> uploadedFiles = new List<string>();
-            foreach (IFormFile postedFile in ImgPath)
+            if (!int.TryParse(Request.Form["Category.Id"], out var categoryId))
             {
-                //string fileName = Path.GetFileName(product.ImgPath);
-                string fileName = postedFile.FileName;
-                using (FileStream stream = new FileStream(Path.Combine(pathPhotos, fileName), FileMode.Create))
+                TempData["error"] = "Categorie invalide";
+                return View();
+            }
+            ViewBag.Category = new SelectList(_context.Categories, "Id", "Name");// in case error cateogry is still filled
+            // pour les photos 
+            var pathPhotos = Path.Combine(_he.WebRootPath, "files/photos");
+            if (!System.IO.Directory.Exists(pathPhotos))
+            {
+                System.IO.Directory.CreateDirectory(pathPhotos);
+            }
+        
+
+            var uploadedFiles = new List<string>();
+            foreach (var postedFile in imgPath)
+            {
+                var fileName = Path.Combine(pathPhotos, $"{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}{postedFile.FileName}");
+
+                await using var stream = new FileStream(fileName, FileMode.Create);
+                await postedFile.CopyToAsync(stream);
+                uploadedFiles.Add(fileName);
+                product.ImgPath = fileName;
+
+                if (new FileInfo(fileName).Length > 1_200_000)
                 {
-                    postedFile.CopyTo(stream);
-                    uploadedFiles.Add(fileName);
-                    ViewBag.Message1 += string.Format("<b>{0}</b> uploaded.<br />", fileName);
-                    product.ImgPath = fileName;
+                    System.IO.File.Delete(fileName);
+                    TempData["error"] = "fichier trop gros 1.2Mo max";
+                    return View();
                 }
+                if (!postedFile.ContentType.Contains("jpeg") && !postedFile.ContentType.Contains("png"))
+                {
+                    System.IO.File.Delete(fileName);
+                    TempData["error"] = "nous acceptons seulement les jpeg ou les png";
+                    return View();
+                }
+
+                var directories = ImageMetadataReader.ReadMetadata(fileName);
+                var file = directories[0];
+                var width = 0;
+                var height = 0;
+                
+                if (postedFile.ContentType.Contains("jpeg"))
+                {
+                    int.TryParse(file.Tags[3].Description?.Split(" ")[0], out  width);
+                    int.TryParse(file.Tags[2].Description?.Split(" ")[0], out  height);
+                }
+                else
+                {
+                    int.TryParse(file.Tags[0].Description?.Split(" ")[0], out  width);
+                    int.TryParse(file.Tags[1].Description?.Split(" ")[0], out  height);
+                }
+
+                if (width >1920 || height > 1500)
+                {
+                    System.IO.File.Delete(fileName);
+                    TempData["error"] = "fichier trop grand en dimension 1920*1500 max";
+                    return View();
+                }
+                //string fileName = Path.GetFileName(product.ImgPath);
             }
 
             // pour les certificats
-            string pathCertificates = Path.Combine(this._he.WebRootPath, "files/certificates");
-            if (!Directory.Exists(pathCertificates))
+            var pathCertificates = Path.Combine(_he.WebRootPath, "files/certificates");
+            if (!System.IO.Directory.Exists(pathCertificates))
             {
-                Directory.CreateDirectory(pathCertificates);
+                System.IO.Directory.CreateDirectory(pathCertificates);
             }
 
-            List<string> uploadedCerts = new List<string>();
-            foreach (IFormFile postedFile in Certificat)
+            var uploadedCerts = new List<string>();
+            foreach (var postedFile in certificat)
             {
-                // string fileName = Path.GetFileName(product.Certificat);
-                string fileName = postedFile.FileName;
-                using (FileStream stream = new FileStream(Path.Combine(pathCertificates, fileName), FileMode.Create))
+                if (!postedFile.ContentType.Contains("pdf"))
                 {
-                    postedFile.CopyTo(stream);
-                    uploadedCerts.Add(fileName);
-                    ViewBag.Message2 += string.Format("<b>{0}</b> uploaded.<br />", fileName);
-                    product.Certificat = fileName;
+                    TempData["error"] = "le certificat n'est pas un pdf";
+                    return View();
+                }   
+                var fileName =  Path.Combine(pathPhotos,  DateTime.Now.ToFileTime() +  postedFile.FileName);
+                await using var stream = new FileStream(fileName, FileMode.Create);
+                await postedFile.CopyToAsync(stream);
+                if (new FileInfo(fileName).Length > 1_200_000)
+                {
+                  System.IO.File.Delete(fileName);
+                  TempData["error"] = "fichier trop grand en dimension 1920*1500 max";
+                  return View();
                 }
+                uploadedCerts.Add(fileName);
+                product.Certificat = fileName;
             }
-
-            product.User = _context.Users.Find(2);
-            product.Category = _context.Categories.Find(int.Parse(Request.Form["Category.Id"]));
+            product.User = _context.Users.Find(HttpContext.Session.GetInt32("Id"));
+            product.Category = _context.Categories.Find(categoryId);
 
             TempData["Message"] = "File successfully uploaded to File System.";
-
-           // if (ModelState.IsValid)
-            // {
+            if (ModelState.IsValid)
+            {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            // }
-            //return View(product);
+            }
+            return RedirectToAction("Index");
         }
 
         // GET: Product/Edit/5
