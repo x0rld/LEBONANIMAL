@@ -12,10 +12,11 @@
         <div class="text-danger">
             @TempData.Peek("error")
         </div>
+        TempData["error"] = string.Empty;
     }
 }
 
-<form asp-action="Login">
+<form asp-action="Login" asp-route-redirectTo="@ViewBag.redirectTo">
     
     <div class="form-group">
         <label asp-for="Email" class="control-label"></label>
