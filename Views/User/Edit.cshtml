@@ -7,24 +7,25 @@
 
 <h1>Edit</h1>
 
-<h4>Category</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+         <section class=" d-flex flex-row justify-content-between m-2">
+                <a class="card d-flex flex-row justify-content-between  col-10 bg-dark text-light" >
+                    <div class=" overflow-hidden w-25 border "><img src="~/img/annonces/chat.jpg" class="img-thumbnail h-100 bg-dark  border-0" alt="...">
+                        </div>
+                    <div class="card-body text-center h-100 d-flex flex-column justify-content-center">
+                        <h5 class="card-title border border-secondary ">Card title</h5>
+                        <p class="card-text h-50 border-bottom-2 border-secondary">desc</p>
+                         <p class="">Price</p>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center">
+                        
+                        <form method="post" class="px-2">
+                        <label for="Achat"></label>
+                         <input type="submit" name="Achat" value="Mettre au panier" class="btn-success"/>
+                        </form>
+                    </div>
+                </a>                  
+
+            </section>
 
 <div>
     <a asp-action="Index">Back to List</a>
