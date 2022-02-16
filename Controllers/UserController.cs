@@ -1,4 +1,3 @@
-#nullable disable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,8 +64,9 @@ namespace lebonanimal.Controllers
             return RedirectToAction("Index");
         }
 // GET: User/Create
-        public IActionResult Login()
+        public IActionResult Login(string? redirectTo)
         {
+            ViewBag.redirectTo = redirectTo;
             return View();
         }
 
@@ -75,10 +75,10 @@ namespace lebonanimal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login([Bind("Email,Password")] UserLogin user)
+        public IActionResult Login(UserLogin user,string? redirectTo)
         {
             if (!ModelState.IsValid) return View(user);
-            var userDb = _context.Users.Single(user1 => user1.Email == user.Email);
+            var userDb = _context.Users.Single(userDb => userDb.Email == user.Email);
  
             if(!Argon2.Verify(userDb.Password,user.Password))
             {
@@ -89,9 +89,14 @@ namespace lebonanimal.Controllers
             HttpContext.Session.SetString("Lastname",userDb.Lastname);
             HttpContext.Session.SetString("Email",userDb.Email);
             HttpContext.Session.SetInt32("Id",userDb.Id);
-            HttpContext.Session.SetInt32("Admin",userDb.Admin ? 1 : 0);
+            HttpContext.Session.SetInt32("IsAdmin",userDb.Admin ? 1 : 0);
 
+            if (!string.IsNullOrEmpty(redirectTo))
+            {
+                return Redirect(redirectTo);
+            }
             return RedirectToAction("Index");
+            
         }
 
         // GET: User/Edit/5
