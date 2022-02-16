@@ -29,6 +29,10 @@ namespace lebonanimal.Controllers
         // GET: User
         public async Task<IActionResult> ModifyUser()
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             return View("User/ModifyUser", await _context.Users.ToListAsync());
         }
 
@@ -36,12 +40,19 @@ namespace lebonanimal.Controllers
         // GET: User/Create
         public IActionResult ModifyUsers()
         {
-
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             return View("User/ModifyUser");
         }
         // GET: User/Details/5
         public async Task<IActionResult> DetailsUser(int? id)
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             if (id == null)
             {
                 return NotFound();
@@ -60,6 +71,10 @@ namespace lebonanimal.Controllers
         // GET: User/Create
         public IActionResult CreateUser()
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             return View("User/CreateUser");
         }
 
@@ -70,6 +85,10 @@ namespace lebonanimal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateUser([Bind("Id,Firstname,Lastname,Email,Password,ConfirmPassword,Banned,Admin")] User user)
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             if (!ModelState.IsValid) return View(user);
             user.Password = Argon2.Hash(user.Password);
             _context.Add(user);
@@ -80,6 +99,10 @@ namespace lebonanimal.Controllers
         // GET: User/Edit/5
         public async Task<IActionResult> EditUser(int? id)
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             if (id == null)
             {
                 return NotFound();
@@ -100,6 +123,10 @@ namespace lebonanimal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditUser(int id, [Bind("Id,Firstname,Lastname,Email,Password,Banned,Admin")] User user)
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             if (id != user.Id)
             {
                 return NotFound();
@@ -131,6 +158,10 @@ namespace lebonanimal.Controllers
         // GET: User/Delete/5
         public async Task<IActionResult> DeleteUser(int? id)
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             if (id == null)
             {
                 return NotFound();
@@ -149,6 +180,10 @@ namespace lebonanimal.Controllers
         // GET: Product
         public async Task<IActionResult> UnbanUser()
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             return View("User/UnbanUser", await _context.Users.Where(x => x.Banned == true).ToListAsync());
         }
 
@@ -157,6 +192,10 @@ namespace lebonanimal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UnbanUser(int id)
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -193,6 +232,10 @@ namespace lebonanimal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             var user = await _context.Users.FindAsync(id);
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
@@ -209,18 +252,30 @@ namespace lebonanimal.Controllers
         // GET: Product
         public async Task<IActionResult> IndexProduct()
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             return View("Product/IndexProduct", await _context.Products.ToListAsync());
         }
 
         // GET: Product
         public async Task<IActionResult> DeletedProduct()
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             return View("Product/DeletedProduct", await _context.Products.Where(x => x.Deleted == true).ToListAsync());
         }
 
         // GET: Product/Details/5
         public async Task<IActionResult> DetailsProduct(int? id)
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             if (id == null)
             {
                 return NotFound();
@@ -239,6 +294,10 @@ namespace lebonanimal.Controllers
         // GET: Product/Edit/5
         public async Task<IActionResult> EditProduct(int? id)
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             if (id == null)
             {
                 return NotFound();
@@ -260,6 +319,10 @@ namespace lebonanimal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProduct(int id, [Bind("Id,Title,Price,ImgPath,Description,Certificat,Enabled,Deleted")] Product product)
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             if (id != product.Id)
             {
                 return NotFound();
@@ -291,6 +354,10 @@ namespace lebonanimal.Controllers
         // GET: Product
         public async Task<IActionResult> ApproveProduct()
         {
+            if ( HttpContext.Session.GetInt32("IsAdmin") is null or 0 )
+            {
+                return NotFound();
+            }
             return View("Product/ApproveProduct", await _context.Products.Where(x=>x.Deleted == false && x.Enabled==false).ToListAsync());
         }
 
@@ -299,6 +366,10 @@ namespace lebonanimal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApproveProduct(int id)
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             var product = await _context.Products
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -335,6 +406,10 @@ namespace lebonanimal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DisapproveProduct(int id)
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             var product = await _context.Products
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -369,6 +444,10 @@ namespace lebonanimal.Controllers
         // GET: Product/Delete/5
         public async Task<IActionResult> DeleteProduct(int? id)
         {
+            if (HttpContext.Session.GetInt32("IsAdmin") is null or 0)
+            {
+                return NotFound();
+            }
             if (id == null)
             {
                 return NotFound();
