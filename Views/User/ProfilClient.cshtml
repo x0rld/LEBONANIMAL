@@ -1,0 +1,47 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    
+}
+<form class="d-flex flex-column align-items-center flex-wrap mb-4  bg-dark text-light " >
+    
+    <h2 class="col-4 mt-2">Mon Profil</h2>
+     
+    <div class="col-4 border-secondary border m-1 rounded  disabled d-flex flex-column flex-wrap align-items-center">
+       <label  for="Nom" >Nom</label>
+       <input type="text" placeholder="Nouveau Nom" name="Nom" class="m-1  disabled "  />
+       
+       <label  for="Prenom">Prénom</label>
+       <input type="text" placeholder="Nouveau Prénom" name="Prenom" class="m-1  disabled "  />
+
+       <label  for="address">Adresse</label>
+         <input type="text" placeholder="Nouvelle addresse" name="address" class="m-1  disabled"  />
+        
+         <label  for="mdp">Changer mot de passe</label>
+         <input type="text" placeholder="Nouveau mot de passe" name="mdp" class="m-1  disabled"   />
+
+       <label  for="Confirm-Password">Confirmer mot de passe</label>
+        <input type="text" placeholder="Confirm-Password" name="Confirm-Password" class="m-1  disabled"   />
+
+        <label  for="e-mail">e-mail</label>
+         <input type="email" placeholder="Nouveau email" name="e-mail" class="m-1  disabled"  />
+
+         <input class="btn-warning rounded m-4" type="submit" value="Modifier mes infos "/>            
+    </div>
+
+   <div class="col-12 border-secondary border  rounded  flex-row flex-wrap justify-content-around ">
+       <p class="p-1">Mes annonces:</p>
+       <a class="p-3">Titre annonce </a>
+     </div>
+</form>
+
+<section class="d-flex flex-row flex-wrap justify-content-around  mt-4  col-12  bg-dark text-light text-center">
+    <h2 class="col-12 text-center">Mes Achats</h2>
+    <div class="col-12 border-secondary border-top d-flex flex-row flex-wrap justify-content-around">
+        <div class="col-4 d-flex flex-column flex-wrap ">Achat</div>
+        <div class="col-4 d-flex flex-column flex-wrap">Nom produit</div>
+        <div class="col-4 d-flex flex-column flex-wrap">Prix</div>
+    </div>
+    
+</section>

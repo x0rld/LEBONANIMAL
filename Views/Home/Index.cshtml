@@ -1,8 +1,9 @@
-﻿@{
+﻿@model lebonanimal.Models.Product;
+@{
     ViewData["Title"] = "Home Page";
 }
 
-            <div class="row container-fluid h-50 ">
+            <div class="row container-fluid h-50 d-flex justify-content-center  ">
                 <div class="col-10 d-flex justify-content-center h-50 mb-3 mt-3 flex-nowrap flex-row ">
                          <div class="dropdown">
                       <a class="btn btn-secondary dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
@@ -33,8 +34,8 @@
                  </div>
               </div>
                        
-            <section class=" d-flex flex-row justify-content-between m-2">
-                <div class="card d-flex flex-row justify-content-between  col-10 bg-dark text-light" >
+            <section class=" d-flex flex-row justify-content-center m-2">
+                <a class="card d-flex flex-row justify-content-between  col-10 bg-dark text-light" >
                     <div class=" overflow-hidden w-25 border "><img src="~/img/annonces/chat.jpg" class="img-thumbnail h-100 bg-dark  border-0" alt="...">
                         </div>
                     <div class="card-body text-center h-100 d-flex flex-column justify-content-center">
@@ -46,10 +47,10 @@
                         
                         <form method="post" class="px-2">
                         <label for="Achat"></label>
-                         <input type="submit" name="Achat" value="Acheter"/>
+                         <input type="submit" name="Achat" value="Mettre au panier" class="btn-success"/>
                         </form>
                     </div>
-                </div>                  
+                </a>                  
 
             </section>
 

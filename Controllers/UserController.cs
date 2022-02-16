@@ -161,10 +161,16 @@ namespace lebonanimal.Controllers
             return View();
         }
 
-        public IActionResult ConnectedClient()
+        public IActionResult ProfilClient()
         {
             return View();
         }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
 
     }
 }

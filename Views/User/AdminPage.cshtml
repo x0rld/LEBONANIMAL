@@ -1,4 +1,4 @@
-﻿
+﻿@model lebonanimal.Models.User;
 @{
     ViewData["Title"] = "AdminPage";
 }
@@ -29,22 +29,29 @@
 
 <section >
     <h2 class="col-12">Liste Users</h2>
-<div class="d-flex flex-row flex-wrap justify-content-around  mt-4 border-secondary border col-12  bg-dark text-light ">
-    <h2 class="col-12 text-center">User1</h2>
-    <div class="col-12 border-secondary border d-flex flex-row flex-wrap justify-content-around">
-        <div class="col-4">Inscrit le:</div>
-        <div class="col-4">x annonce(s)</div>
-        <div class="col-4"><button>Supprimer</button></div>
-    </div> 
-</div>
+
+    <div class="d-flex flex-row flex-wrap justify-content-around  mt-4 border-secondary border col-12  bg-dark text-light ">
+        <h2 class="col-12 text-center">User1</h2>
+
+        <div class="col-12 border-secondary border d-flex flex-row flex-wrap justify-content-around">
+            <div class="col-4">Inscrit le:</div>
+            <div class="col-4">x annonce(s)</div>
+            <form >
+                <input type="hidden" value="" />
+                <input type="submit" class="btn-danger text-center rounded" value="Supprimer" />
+            </form>
+        </div> 
+    </div>
 
      <h2 class="col-12">Liste annonces supprimées</h2>
-<div class="d-flex flex-row flex-wrap justify-content-around  mt-4 border-secondary border col-12  bg-dark text-light">
-    <div class="col-12 border-secondary border d-flex flex-row flex-wrap justify-content-around">
-        <div class="col-4">idUser</div>
-        <div class="col-4">idannonce:</div>
-        <div class="col-4">date suppression suprimé annonce</div>
-    </div> 
-</div>
+        <div class="d-flex flex-row flex-wrap justify-content-around  mt-4 border-secondary border col-12  bg-dark text-light">
+
+            <div class="col-12 border-secondary border d-flex flex-row flex-wrap justify-content-around">
+
+                <div class="col-4">idUser ui</div>
+                <div class="col-4">idannonce:1</div>
+                <div class="col-4">date suppression suprimé annonce </div>
+            </div> 
+        </div>
 </section>
 
