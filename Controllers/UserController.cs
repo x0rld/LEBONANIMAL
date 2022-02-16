@@ -191,7 +191,7 @@ namespace lebonanimal.Controllers
 
         public IActionResult AdminPage()
         {
-            return View();
+            return View(_context.Products.ToList());
         }
 
         public IActionResult ConnectedClient()

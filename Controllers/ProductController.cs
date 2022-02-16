@@ -159,16 +159,16 @@ namespace lebonanimal.Controllers
                 uploadedCerts.Add(fileName);
                 product.Certificat = fileName;
             }
+
             product.User = _context.Users.Find(HttpContext.Session.GetInt32("Id"));
             product.Category = _context.Categories.Find(categoryId);
-
-            TempData["Message"] = "File successfully uploaded to File System.";
             if (ModelState.IsValid)
             {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+                  return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            return View();
         }
 
         // GET: Product/Edit/5
@@ -222,6 +222,56 @@ namespace lebonanimal.Controllers
             return View(product);
         }
 
+        // GET: Product/Buy/5
+        public async Task<IActionResult> Buy(int? id)
+        {
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
+        // POST: Product/Buy/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Buy(int id, Product product)
+        {
+            if (id != product.Id)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+ 
+                var prod = _context.Products.SingleOrDefault(x => x.Id==product.Id); 
+                _context.Update(prod);
+                await _context.SaveChangesAsync(); 
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProductExists(product.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
         // GET: Product/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -250,6 +300,7 @@ namespace lebonanimal.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool ProductExists(int id)
         {
