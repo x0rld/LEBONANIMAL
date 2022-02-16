@@ -6,7 +6,8 @@ namespace lebonanimal.Models;
 
 public class User
 {
-    [Key] public int Id { get; set; }
+    [Key] 
+    public int Id { get; set; }
     
     [Required(ErrorMessage = "le champ est vide")]
     [MaxLength(50,ErrorMessage = "La taille max est 50")]
@@ -41,4 +42,7 @@ public class User
     public bool Banned { get; set; }
     [DefaultValue(false)]
     public bool Admin { get; set; }
+
+    [InverseProperty(nameof(Order.UserIdNavigation))]
+    public virtual ICollection<Order> Orders { get; set; }
 }
