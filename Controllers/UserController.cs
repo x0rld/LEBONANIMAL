@@ -1,8 +1,8 @@
-#nullable disable
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Isopoh.Cryptography.Argon2;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +23,7 @@ namespace lebonanimal.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            return View(await _context.Users.ToListAsync());
         }
 
         // GET: User/Details/5
@@ -34,14 +34,14 @@ namespace lebonanimal.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
+            var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(user);
         }
 
         // GET: User/Create
@@ -55,15 +55,48 @@ namespace lebonanimal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Category category)
+        public async Task<IActionResult> Create([Bind("Id,Firstname,Lastname,Email,Password,ConfirmPassword,Banned,Admin")] User user)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(user);
+            user.Password = Argon2.Hash(user.Password);
+            _context.Add(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+// GET: User/Create
+        public IActionResult Login(string? redirectTo)
+        {
+            ViewBag.redirectTo = redirectTo;
+            return View();
+        }
+
+        // POST: User/Login
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Login(UserLogin user,string? redirectTo)
+        {
+            if (!ModelState.IsValid) return View(user);
+            var userDb = _context.Users.Single(userDb => userDb.Email == user.Email);
+ 
+            if(!Argon2.Verify(userDb.Password,user.Password))
             {
-                _context.Add(category);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                TempData["error"] = "mot de passe ou mail incorrect";
+                return View(user);
             }
-            return View(category);
+            HttpContext.Session.SetString("Firstname",userDb.Firstname);
+            HttpContext.Session.SetString("Lastname",userDb.Lastname);
+            HttpContext.Session.SetString("Email",userDb.Email);
+            HttpContext.Session.SetInt32("Id",userDb.Id);
+            HttpContext.Session.SetInt32("IsAdmin",userDb.Admin ? 1 : 0);
+
+            if (!string.IsNullOrEmpty(redirectTo))
+            {
+                return Redirect(redirectTo);
+            }
+            return RedirectToAction("Index");
+            
         }
 
         // GET: User/Edit/5
@@ -74,12 +107,12 @@ namespace lebonanimal.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            return View(category);
+            return View(user);
         }
 
         // POST: User/Edit/5
@@ -87,9 +120,9 @@ namespace lebonanimal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Firstname,Lastname,Email,Password,Banned,Admin")] User user)
         {
-            if (id != category.Id)
+            if (id != user.Id)
             {
                 return NotFound();
             }
@@ -98,12 +131,12 @@ namespace lebonanimal.Controllers
             {
                 try
                 {
-                    _context.Update(category);
+                    _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryExists(category.Id))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -114,7 +147,7 @@ namespace lebonanimal.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(user);
         }
 
         // GET: User/Delete/5
@@ -125,14 +158,14 @@ namespace lebonanimal.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
+            var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(user);
         }
 
         // POST: User/Delete/5
@@ -140,15 +173,29 @@ namespace lebonanimal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            _context.Categories.Remove(category);
+            var user = await _context.Users.FindAsync(id);
+            _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryExists(int id)
+        // GET: User products ordered
+        public async Task<IActionResult> UserProductsOrdered()
         {
-            return _context.Categories.Any(e => e.Id == id);
+
+            IEnumerable<UserProductsOrdered> orderedProducts = from o in _context.Orders 
+                                  join u in _context.Users on o.UserId equals u.Id
+                                  join p in _context.Products on o.ProductId equals p.Id
+                                  select new UserProductsOrdered { OrderVm = o, UserVm = u, ProductVm = p }; 
+            
+
+            return View(orderedProducts);
+        }
+
+
+        private bool UserExists(int id)
+        {
+            return _context.Users.Any(e => e.Id == id);
         }
 
         public IActionResult AddAnnonce()
@@ -158,7 +205,7 @@ namespace lebonanimal.Controllers
 
         public IActionResult AdminPage()
         {
-            return View();
+            return View(_context.Products.ToList());
         }
 
         public IActionResult ProfilClient()
@@ -170,7 +217,6 @@ namespace lebonanimal.Controllers
         {
             return View();
         }
-
 
     }
 }
