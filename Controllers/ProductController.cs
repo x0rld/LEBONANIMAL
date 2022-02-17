@@ -256,6 +256,12 @@ namespace lebonanimal.Controllers
  
                 var prod = _context.Products.SingleOrDefault(x => x.Id==product.Id); 
                 _context.Update(prod);
+
+                Order order = new Order();
+                order.UserId = HttpContext.Session.GetInt32("Id").Value;
+                order.ProductId = product.Id;
+                _context.Add(order);
+
                 await _context.SaveChangesAsync(); 
             }
             catch (DbUpdateConcurrencyException)
