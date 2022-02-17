@@ -179,6 +179,20 @@ namespace lebonanimal.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: User products ordered
+        public async Task<IActionResult> UserProductsOrdered()
+        {
+
+            IEnumerable<UserProductsOrdered> orderedProducts = from o in _context.Orders 
+                                  join u in _context.Users on o.UserId equals u.Id
+                                  join p in _context.Products on o.ProductId equals p.Id
+                                  select new UserProductsOrdered { OrderVm = o, UserVm = u, ProductVm = p }; 
+            
+
+            return View(orderedProducts);
+        }
+
+
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.Id == id);
@@ -198,6 +212,7 @@ namespace lebonanimal.Controllers
         {
             return View();
         }
+
 
     }
 }
