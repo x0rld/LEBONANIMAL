@@ -4,9 +4,33 @@
 @{
     
 }
-<form class="d-flex flex-column align-items-center flex-wrap mb-4  bg-dark text-light " >
+<div  class="d-flex flex-column align-items-center flex-wrap mb-4  bg-primary h-25 text-center rounded">
+    <h2 class="col-4 mt-2">Mon profil</h2>
+    <div class="bg-secondary col-4 my-1 rounded">
+        <h3>Nom:</h3>
+        <p>olive</p>
+    </div>
+
+     <div  class="bg-secondary col-4 my-1 rounded">
+        <h3>Prénom:</h3>
+          <p>jacksou</p>
+    </div>
+
+    <div  class="bg-secondary col-4 my-1 rounded">
+        <h3>Adresse:</h3>
+        <p>12 la rue du Menil</p>
+    </div>
+
+     <div  class="bg-secondary col-4 mt-1 mb-4 rounded">
+           <h3>Email:</h3>
+          <p>doomah@gmail.com</p>
+    </div>
+
+</div>
+
+<form class="d-flex flex-column align-items-center flex-wrap mb-4  bg-dark text-light rounded " >
     
-    <h2 class="col-4 mt-2">Mon Profil</h2>
+    <h2 class="col-6 mt-2 text-center">Modifier mes infos</h2>
      
     <div class="col-4 border-secondary border m-1 rounded  disabled d-flex flex-column flex-wrap align-items-center">
        <label  for="Nom" >Nom</label>
@@ -25,14 +49,14 @@
         <input type="text" placeholder="Confirm-Password" name="Confirm-Password" class="m-1  disabled"   />
 
         <label  for="e-mail">e-mail</label>
-         <input type="email" placeholder="Nouveau email" name="e-mail" class="m-1  disabled"  />
+         <input type="email" placeholder="Nouvelle email" name="e-mail" class="m-1  disabled"  />
 
          <input class="btn-warning rounded m-4" type="submit" value="Modifier mes infos "/>            
     </div>
 
    <div class="col-12 border-secondary border  rounded  d-flex flex-column flex-nowrap align-items-center ">
        <p class="p-1">Mes annonces:</p>
-       <a class="p-3">
+       <a class="p-3 text-decoration-none">
            Titre annonce
            <div>
                 <button class="btn-warning rounded">Editer </button>
@@ -43,7 +67,7 @@
      </div>
 </form>
 
-<section class="d-flex flex-row flex-wrap justify-content-around  mt-4  col-12  bg-dark text-light text-center">
+<section class="d-flex flex-row flex-wrap justify-content-around  mt-4  col-12  bg-dark text-light text-center rounded">
     <h2 class="col-12 text-center">Mes Achats</h2>
     <div class="col-12 border-secondary border-top d-flex flex-row flex-wrap justify-content-around">
         <div class="col-4 d-flex flex-column flex-wrap ">Achat</div>
