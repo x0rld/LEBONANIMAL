@@ -182,14 +182,22 @@ namespace lebonanimal.Controllers
         // GET: User products ordered
         public async Task<IActionResult> UserProductsOrdered()
         {
-
+            int? id = HttpContext.Session.GetInt32("Id");
             IEnumerable<UserProductsOrdered> orderedProducts = from o in _context.Orders 
-                                  join u in _context.Users on o.UserId equals u.Id
+                                  join u in _context.Users on o.UserId equals id
                                   join p in _context.Products on o.ProductId equals p.Id
                                   select new UserProductsOrdered { OrderVm = o, UserVm = u, ProductVm = p }; 
             
 
             return View(orderedProducts);
+        }
+
+        // GET: List of products published by the connected user
+        public async Task<IActionResult> ListPublishedProducts()
+        {
+            int? id = HttpContext.Session.GetInt32("Id");
+            IEnumerable<Product> publishedOrder = _context.Products.Where(p => p.UserId == id).ToList();
+            return View(publishedOrder);
         }
 
 
