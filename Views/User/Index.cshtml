@@ -7,7 +7,9 @@
 
 <h1>Index</h1>
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New</a> <br />
+    <a asp-action="UserProductsOrdered">Liste de mes commandes</a> <br />
+    <a asp-action="ListPublishedProducts">Liste de mes annonces publiées</a>
 </p>
 @if (!string.IsNullOrEmpty(Context.Session.GetString("Firstname")))
 {

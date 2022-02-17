@@ -106,7 +106,7 @@ namespace lebonanimal.Controllers
                     TempData["error"] = "nous acceptons seulement les jpeg ou les png";
                     return View();
                 }
-
+                stream.Close();
                 var directories = ImageMetadataReader.ReadMetadata(fileName);
                 var file = directories[0];
                 var width = 0;
@@ -147,7 +147,7 @@ namespace lebonanimal.Controllers
                     TempData["error"] = "le certificat n'est pas un pdf";
                     return View();
                 }   
-                var fileName =  Path.Combine(pathPhotos,  DateTime.Now.ToFileTime() +  postedFile.FileName);
+                var fileName =  Path.Combine(pathCertificates,  DateTime.Now.ToFileTime() +  postedFile.FileName);
                 await using var stream = new FileStream(fileName, FileMode.Create);
                 await postedFile.CopyToAsync(stream);
                 if (new FileInfo(fileName).Length > 1_200_000)
@@ -162,12 +162,12 @@ namespace lebonanimal.Controllers
 
             product.User = _context.Users.Find(HttpContext.Session.GetInt32("Id"));
             product.Category = _context.Categories.Find(categoryId);
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                   return RedirectToAction("Index");
-            }
+            //}
             return View();
         }
 
