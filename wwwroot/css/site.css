@@ -1,5 +1,6 @@
+@import url("https://bootswatch.com/5/materia/bootstrap.min.css");
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
@@ -15,4 +16,11 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+#logo-img img
+{
+    max-width:250px!important;
+    width:20%!important;
+    height:auto!important;
 }

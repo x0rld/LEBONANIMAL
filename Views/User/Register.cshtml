@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewData["Title"] = "View";
+}
+
+<form class="d-flex flex-column align-items-center flex-wrap mb-4  bg-dark text-light text-center" >
+    
+    <h2 class="col-4 mt-2">Mon Profil</h2>
+     
+    <div class="col-4 border-secondary border m-1 rounded  disabled d-flex flex-column flex-wrap align-items-center">
+       <label  for="Nom" >Nom</label>
+       <input type="text" placeholder="Nouveau Nom" name="Nom" class="m-1  disabled "  />
+       
+       <label  for="Prenom">Prénom</label>
+       <input type="text" placeholder="Nouveau Prénom" name="Prenom" class="m-1  disabled "  />
+
+       <label  for="address">Adresse</label>
+         <input type="text" placeholder="Nouvelle addresse" name="address" class="m-1  disabled"  />
+        
+         <label  for="mdp">mot de passe</label>
+         <input type="text" placeholder="Nouveau mot de passe" name="mdp" class="m-1  disabled"   />
+
+       <label  for="Confirm-Password">Confirmer mot de passe</label>
+        <input type="text" placeholder="Confirm-Password" name="Confirm-Password" class="m-1  disabled"   />
+
+        <label  for="e-mail">e-mail</label>
+         <input type="email" placeholder="Nouveau email" name="e-mail" class="m-1  disabled"  />
+
+         <input class="btn-success rounded m-4" type="submit" value="Création Compte "/>   
+            
+    </div>
+</form>
+

@@ -208,11 +208,15 @@ namespace lebonanimal.Controllers
             return View(_context.Products.ToList());
         }
 
-        public IActionResult ConnectedClient()
+        public IActionResult ProfilClient()
         {
             return View();
         }
 
+        public IActionResult Register()
+        {
+            return View();
+        }
 
     }
 }
